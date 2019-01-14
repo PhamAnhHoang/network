@@ -1,0 +1,30 @@
+[Q1] : Ban hay cho biet doi bong nao vo dich World Cup 2014?
+A. Mu
+B. Phap
+C. Hoang Anh Gia lai
+D. Duc
+ANS : D
+[Q2] : Than dong Aoe Viet Nam la ai?
+A. Tieu Bach Long
+B. Hoang Mai Nhi
+C. Chim se Di Nang
+D. Nguyen The Bao
+ANS : C
+[Q3] : Lop Viet Nhat K57 co bao nhieu ban nu?
+A. 5
+B. 10
+C. Nhieu qua khong dem het
+D. Viet Nhat co nu a?
+ANS : A
+[Q4] : Sinh vien Viet Nhat K57 du kien ra truong vao nam?
+A. 2016
+B. 2017
+C. 2028
+D. 2019
+ANS : B
+[Q5] : Trong giang sinh nay Nguyen The Bao di choi voi ai?
+A. Ban gai hoi cap 1
+B. Ban gai hoi cap 2
+C. Ban trai dai hoc.
+D.giang sinh la ngay gi ta?
+ANS : C
