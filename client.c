@@ -67,6 +67,7 @@ int main()
   int count_question,i,j,m;
   int state,log;
   int write;
+  int count_login;
   int choose;
   choose = 0;
   while(choose == 0)
@@ -84,6 +85,7 @@ int main()
       switch(choose)
         {
         case CASE_LOGIN :
+          count_login = 0;
           m = 0;
           write = CAN_NOT_WRITE;
           count_question = 0;
@@ -93,7 +95,6 @@ int main()
               if(log == HAS_NOT_LOG)  // Thao tac dang nhap
                 {
                   login(username, passwd, sock);
-                  log = HAS_LOG;
                 }
               char *receive;
               receive = (char *) malloc( 1024 * sizeof(char) );
@@ -137,16 +138,26 @@ int main()
               //kiểm tra nếu nhận về là lỗi password thì exit
               if(strcmp(receive,"Username or password is incorrect") == 0)
                 {
-                  printf("%s\n\n", receive);
-                  free(receive);
-                  choose = 0;
-                  exit(1);
-                  break;
+                  printf("%s\n", receive);
+                  count_login++;
+                  if(count_login == 3){
+                    printf("Bạn đã đăng nhập sai 3 lần !!!\n");
+                    free(receive);
+                    choose = 0;
+                    exit(1);
+                    break;
+                  }
+                  else{
+                    printf("Mời bạn nhập lại tên đăng nhập và mật khẩu.\n");
+                    free(receive);
+                  }
+
                 }
 
                //kiểm tra nếu khác mã lỗi và cờ write chưa bật thì tiến hành load câu hỏi vào mảng q
               if(strcmp(receive,"Username or password is incorrect") != 0 && write == CAN_NOT_WRITE)
                 {
+                  log = HAS_LOG;
                   strcpy(q[count_question].quest, receive);
                   free(receive);
                   count_question++;

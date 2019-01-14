@@ -198,11 +198,8 @@ main()
                   if(state == 1)
                     {
                       sendquestion(sock_client);
+                      check = 1;
                     }
-                    check = 1;
-//                   else{
-//                      check = 0;
-//                   }
                 }
               if(receive[0] == '2')
                 {
@@ -213,7 +210,7 @@ main()
                       char *username2;
                       username2 = (char *) malloc(strlen(receive - 1) * sizeof(char));
                       for(j = 1; j < strlen(receive) ; j++)
-                        username2[j-1] = nreceivehan[j];
+                        username2[j-1] = receive[j];
                       username2[strlen(receive) - 1] = '\0';
                       FILE *f;
                       f = fopen("user.txt","a+");
