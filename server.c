@@ -88,7 +88,7 @@ main()
   struct hostent *host;
   int stat_val;
   pid_t child_pid;
-  
+
   // Tao kiem soat tin hieu
   signal(SIGCHLD, handle_child);
 
@@ -135,83 +135,96 @@ main()
 	  while(1)
 	    {
 
-	      char *nhan;
-	      nhan = (char *)malloc(1024*sizeof(char));
-	      byte_recv = recv(sock_client,nhan,1024,0);
-	      nhan[byte_recv]='\0';	             	     
-	      if(strcmp(nhan,"D&A") == 0)
-		{
-		  sendsubject(sock_client);
-		  close(sock_client);
-		  break;
-		}
+	      char *receive;
+	      receive = (char *) malloc(1024 * sizeof(char));
+	      byte_recv = recv(sock_client, receive, 1024, 0);
+	      receive[byte_recv]='\0';
+	      if(strcmp(receive,"D&A") == 0)
+            {
+              sendsubject(sock_client);
+              close(sock_client);
+              break;
+            }
 	      if(check == 1)
-		{
-		  d++;
-		  char dapan[10];
-		  if(strcmp(nhan,"N") == 0)
-		    socauboqua++;
-		  sprintf(dapan,"%d",d);
-		  strcat(dapan,nhan);
-		  //puts(dapan);
-		  chamdiem(dapan);
-		  if(d == 5)
-		    {
-		      char guikq[1024];
-		      char caudung[3];
-		      char causai[3];
-		      char boqua[3];
-		      char diemso[7];
-		      socausai = socausai - socauboqua;
-		      int diemsoD;
-		      diemsoD=socaudung*20 - socausai*10;
-		      sprintf(caudung,"%d",socaudung);
-		      sprintf(causai,"%d",socausai);
-		      sprintf(boqua,"%d",socauboqua);
-		      sprintf(diemso,"%d",diemsoD);
-		      strcat(diemso,"/100");
-		      strcpy(guikq,"Ket Qua :\n");
-		      strcat(guikq,"So cau dung   : ");strcat(guikq,caudung);strcat(guikq,"\n");
-		      strcat(guikq,"So cau sai    : ");strcat(guikq,causai);strcat(guikq,"\n");
-		      strcat(guikq,"So cau bo qua : ");strcat(guikq,boqua);strcat(guikq,"\n");
-		      strcat(guikq,"Diem so : ");		 strcat(guikq,diemso);strcat(guikq,"\n");		   
+            {
+              d++;
+              char dapan[10];
+              if(strcmp(receive, "N") == 0)
+                socauboqua++;
+              sprintf(dapan, "%d", d);
+              strcat(dapan,receive);
+              //puts(dapan);
+              chamdiem(dapan);
+              if(d == 5)
+                {
+                  char guikq[1024];
+                  char caudung[3];
+                  char causai[3];
+                  char boqua[3];
+                  char diemso[7];
+                  socausai = socausai - socauboqua;
+                  int diemsoD;
+                  diemsoD = socaudung * 20 - socausai * 10;
+                  sprintf(caudung, "%d", socaudung);
+                  sprintf(causai, "%d", socausai);
+                  sprintf(boqua, "%d", socauboqua);
+                  sprintf(diemso, "%d", diemsoD);
+                  strcat(diemso, "/100");
+                  strcpy(guikq, "Ket Qua :\n");
+                  strcat(guikq, "So cau dung   : ");
+                  strcat(guikq, caudung);
+                  strcat(guikq, "\n");
+                  strcat(guikq, "So cau sai    : ");
+                  strcat(guikq, causai);
+                  strcat(guikq, "\n");
 
-		      send(sock_client,guikq,strlen(guikq),0);  // Gui tra lai phia Client ket qua  bai thi		
-		    }
-		} 
-	      if(check == 0 && strlen(nhan) > 0 )
-		{
-		  if(nhan[0] == '1')
-		    {
-		      //Xu ly thao tac login
-		      state = checklogin(nhan,sock_client);
-		      if(state == 1)
-			{
-			  sendquestion(sock_client);
-			}
-		      check = 1;
-		    }
-		  if(nhan[0] == '2')
-		    {
-		      //Xu ly thao tac signup
-		      state = checksignup(nhan,sock_client);
-		      if(state == 0)
-			{
-			  char *username2;
-			  username2 = (char *)malloc(strlen(nhan-1)*sizeof(char));
-			  for(j = 1; j < strlen(nhan) ; j++)
-			    username2[j-1] = nhan[j];
-			  username2[strlen(nhan)-1] = '\0';
-			  FILE *f;
-			  f = fopen("user.txt","a+");
-			  fprintf(f,"%s\n",username2);
-			  fclose(f);
-					
-			}
-		    }
+                  strcat(guikq, "So cau bo qua : ");
+                  strcat(guikq, boqua);
+                  strcat(guikq, "\n");
+                  strcat(guikq, "Diem so : ");
+                  strcat(guikq, diemso);strcat(guikq, "\n");
 
-		}
-	      free(nhan);
+                  send(sock_client, guikq, strlen(guikq), 0);  // Gui tra lai phia Client ket qua  bai thi
+                }
+            }
+
+          //kiem tra check = 0 va do dai nhan
+	      if(check == 0 && strlen(receive) > 0 )
+            {
+              if(receive[0] == '1')
+                {
+                  //Xu ly thao tac login
+                  state = checklogin(receive, sock_client);
+                  if(state == 1)
+                    {
+                      sendquestion(sock_client);
+                    }
+                    check = 1;
+//                   else{
+//                      check = 0;
+//                   }
+                }
+              if(receive[0] == '2')
+                {
+                  //Xu ly thao tac signup
+                  state = checksignup(receive, sock_client);
+                  if(state == 0)
+                    {
+                      char *username2;
+                      username2 = (char *) malloc(strlen(receive - 1) * sizeof(char));
+                      for(j = 1; j < strlen(receive) ; j++)
+                        username2[j-1] = nreceivehan[j];
+                      username2[strlen(receive) - 1] = '\0';
+                      FILE *f;
+                      f = fopen("user.txt","a+");
+                      fprintf(f,"%s\n", username2);
+                      fclose(f);
+
+                    }
+                }
+
+            }
+	      free(receive);
 	    }
 	}
 
@@ -231,8 +244,8 @@ int checksignup(char *username,int sock_client)
     {
       i++;
     }
-  username1 = (char *)malloc(i*sizeof(char));
-  strncpy(username1,username,i);
+  username1 = (char *) malloc(i*sizeof(char));
+  strncpy(username1, username,  i);
 
   IS is;
   int flag;
@@ -245,22 +258,22 @@ int checksignup(char *username,int sock_client)
     {
       strcpy(user,"2");
       strcat(user,is->fields[0]);
-      if(strcmp(username1,user) == 0)
+      if(strcmp(username1, user) == 0)
 	flag = 1;
     }
-		
+
   if(flag ==  0)
     {
       check = 0;
-      send(sock_client,"Your user is ready now",strlen("Your user is ready now"),0);
+      send(sock_client, "Your user is ready now", strlen("Your user is ready now"),0);
     }
   if(flag == 1)
     {
       check = 1;
-      send(sock_client,"Username is existed",strlen("Username is existed"),0);
+      send(sock_client, "Username is existed", strlen("Username is existed"),0);
     }
   return check;
-  
+
 }
 int checklogin(char *username,int sock_client)
 {
@@ -273,25 +286,25 @@ int checklogin(char *username,int sock_client)
   char user[1024];
   while(get_line(is)>=0)
     {
-      strcpy(user,"1");
-      strcat(user,is->fields[0]);
-      strcat(user," ");
-      strcat(user,is->fields[1]);
-      if(strcmp(username,user) == 0)
-	flag = 1;
+      strcpy(user, "1");
+      strcat(user, is->fields[0]);
+      strcat(user, " ");
+      strcat(user, is->fields[1]);
+      if(strcmp( username, user ) == 0)
+	    flag = 1;
     }
-		
+
   if(flag ==  0)
     {
       check = 0;
-      send(sock_client,"Username or password is incorrect",strlen("Username or password is incorrect"),0);
+      send(sock_client,"Username or password is incorrect", strlen("Username or password is incorrect"),0);
     }
   if(flag == 1)
     {
       check = 1;
     }
   return check;
-  
+
 }
 int get_numline()
 {
@@ -307,7 +320,7 @@ int get_numline()
 }
 void readfile(int num_line)
 {
-	
+
 
   struct question qu[num_question];
   IS is;
@@ -320,44 +333,44 @@ void readfile(int num_line)
       char line[1024];
       strcpy(line,"");
       for(i=0; i<is->NF;i++)
-	{
-	  strcat(line,is->fields[i]);
-	  strcat(line," ");
-	}
+        {
+          strcat(line,is->fields[i]);
+          strcat(line," ");
+        }
       if(num_line%6 == 1)
-	{
-	  strcpy(qu[num_line/6].question,line);
-	}
+        {
+          strcpy(qu[num_line/6].question, line);
+        }
       if(num_line%6 == 2)
-	{
-	  strcpy(qu[num_line/6].a,line);
-	}
+        {
+          strcpy(qu[num_line/6].a, line);
+        }
       if(num_line%6 == 3)
-	{
-	  strcpy(qu[num_line/6].b,line);
-	}
+        {
+          strcpy(qu[num_line/6].b, line);
+        }
       if(num_line%6 == 4)
-	{
-	  strcpy(qu[num_line/6].c,line);
-	}
+        {
+          strcpy(qu[num_line/6].c, line);
+        }
       if(num_line%6 == 5)
-	{
-	  strcpy(qu[num_line/6].d,line);
-	}
+        {
+          strcpy(qu[num_line/6].d, line);
+        }
       if(num_line%6 == 0)
-	{
-	  strcpy(qu[num_line/6].answer,line);
-	}		
+        {
+          strcpy(qu[num_line/6].answer, line);
+        }
     }
 
   for(i=0;i<num_question;i++)
     {
-      strcpy(q[i].question,qu[i].question);
-      strcpy(q[i].a,qu[i].a);
-      strcpy(q[i].b,qu[i].b);
-      strcpy(q[i].c,qu[i].c);
-      strcpy(q[i].d,qu[i].d);
-      strcpy(q[i].answer,qu[i].answer);		
+      strcpy(q[i].question, qu[i].question);
+      strcpy(q[i].a, qu[i].a);
+      strcpy(q[i].b, qu[i].b);
+      strcpy(q[i].c, qu[i].c);
+      strcpy(q[i].d, qu[i].d);
+      strcpy(q[i].answer, qu[i].answer);
     }
 
 
@@ -369,18 +382,18 @@ void sendquestion(int sock_client)
   char quest[1024];
   for(i = 0 ; i<num_question; i++)
     {
-		
-      strcpy(quest,"");
-      strcat(quest,q[i].question);
-      strcat(quest,"\n");
-      strcat(quest,q[i].a);
-      strcat(quest,"\n");
-      strcat(quest,q[i].b);
-      strcat(quest,"\n");
-      strcat(quest,q[i].c);
-      strcat(quest,"\n");
-      strcat(quest,q[i].d);
-      send(sock_client,quest,strlen(quest),0);
+
+      strcpy(quest, "");
+      strcat(quest, q[i].question);
+      strcat(quest, "\n");
+      strcat(quest, q[i].a);
+      strcat(quest, "\n");
+      strcat(quest, q[i].b);
+      strcat(quest, "\n");
+      strcat(quest, q[i].c);
+      strcat(quest, "\n");
+      strcat(quest, q[i].d);
+      send(sock_client, quest,strlen(quest),0);
       sleep(1);
     }
 }
@@ -389,11 +402,11 @@ void sendsubject(int sock_client)
 {
   FILE *f;
   char *s;
-  f = fopen("dethi.txt","r");
+  f = fopen("dethi.txt", "r");
   while(!feof(f))
     {
       s = fgets(s,100,f);
-      send(sock_client,s,strlen(s),0);
+      send(sock_client, s, strlen(s),0);
     }
   fclose(f);
 }
@@ -409,17 +422,17 @@ void chamdiem(char *dapan)
   while(get_line(is)>=0)
     {
       char *line;
-      line = (char *)malloc(2*sizeof(char));
+      line = (char *) malloc( 2 * sizeof(char) );
 
-      for(i=0; i<is->NF;i++)
-	{
-	  strcat(line,is->fields[i]);
-	}
-      if(strcmp(line,dapan) == 0)
-	{
-	  socaudung++;
-	  flag = 1;
-	}
+      for(i=0; i<is->NF; i++)
+        {
+          strcat(line, is->fields[i]);
+        }
+      if(strcmp(line, dapan) == 0)
+        {
+          socaudung++;
+          flag = 1;
+        }
       free(line);
     }
   if(flag == 0)
