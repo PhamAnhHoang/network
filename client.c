@@ -43,6 +43,7 @@ int main()
   char send_data[1024],*recv_data;
   struct hostent *host;
   struct sockaddr_in server_addr;
+  int send_write = 0;
 
   host = gethostbyname("localhost");
   if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
@@ -110,7 +111,14 @@ int main()
                 {
                   m++;
                   int a;
-
+              if(send_write == 1){
+                    printf("%s", receive);
+                    free(receive);
+                    printf("Cam on ban da su dung dich vu cua chung toi\n");
+                    choose = 0;
+                    exit(1);
+                    break;
+                  }
                   printf("\n%s\n",receive); //In ra dap an
                   printf("Ban co tiep tuc muon tai ve de thi va dap an ?\n");
                   printf("1.Co\n");
@@ -119,8 +127,7 @@ int main()
                   if(a == 1)
                     {
                       send(sock,"D&A", strlen("D&A"),0);
-                      printf("%s", receive);
-                      free(receive);
+		              send_write = 1;
                     }
                   if(a == 2)
                     {
@@ -298,6 +305,5 @@ void signup(int sock)
   strcat(dangnhap, pass1);
   send(sock, dangnhap, strlen(dangnhap), 0);
 }
-
 
 

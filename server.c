@@ -145,7 +145,7 @@ main()
               close(sock_client);
               break;
             }
-	      if(check == 1)
+	      if(check == 1 && strcmp(receive,"D&A") != 0)
             {
               d++;
               char dapan[10];
@@ -397,15 +397,20 @@ void sendquestion(int sock_client)
 
 void sendsubject(int sock_client)
 {
-  FILE *f;
-  char *s;
-  f = fopen("dethi.txt", "r");
-  while(!feof(f))
+  char str[MAXLEN];
+  //char str2[MAXLEN];
+  char *result;
+  result = (char *)calloc(MAXLEN,sizeof(char));
+  FILE *p1;
+  p1=fopen("dethi.txt","r");
+  while(!feof(p1))
     {
-      s = fgets(s,100,f);
-      send(sock_client, s, strlen(s),0);
+       if(fgets(str,MAXLEN-1,p1)!=NULL)
+	  strcat(result,str);
     }
-  fclose(f);
+  send(sock_client, result, strlen(result),0);
+  free(result);
+  fclose(p1);
 }
 
 void chamdiem(char *dapan)
@@ -436,7 +441,6 @@ void chamdiem(char *dapan)
     socausai++;
 
 }
-
 
 
 
