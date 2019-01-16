@@ -469,16 +469,14 @@ void get_rank(int sock_client){
   char stt[5];
   char string[MAXLEN];
   p1=fopen("rank.txt","rb");
-        while(1)
-    {
-      fread(&k,sizeof(k),1,p1);
-      d[++m]=k;
-      if(feof(p1))
-        break;
-    }
-    fclose(p1);
-        int o;
-        for(i=1;i<=m-1;i++)
+  while(!feof(p1))
+  {
+    if(fread(&k,sizeof(k),1,p1)!=NULL)
+    d[++m]=k;
+  }
+  fclose(p1);
+    int o;
+    for(i=1;i<=m-1;i++)
       for(y=i+1;y<=m;y++)
       {
         if(d[i].point<d[y].point)
