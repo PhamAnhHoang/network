@@ -15,7 +15,8 @@
 
 #define CASE_LOGIN 1
 #define CASE_REGISTER 2
-#define CASE_EXIT 3
+#define CASE_RANK 3
+#define CASE_EXIT 4
 
 #define CAN_WRITE 1
 #define CAN_NOT_WRITE 0
@@ -34,7 +35,15 @@ struct question{
   char quest[1024];
 };
 
+typedef struct
+{
+  char name[50];
+  int point;
+}rank;
+
+
 struct question q[6];
+
 
 int main()
 {
@@ -71,13 +80,14 @@ int main()
   int count_login;
   int choose;
   choose = 0;
-  while(choose == 0)
+  while(choose != 4)
     {
       printf("\nCHUONG TRINH THI TRAC NGHIEM\n");
       printf("**************************************************\n");
       printf("		1.Dang nhap\n");
       printf("		2.Dang ky\n");
-      printf("		3.Thoat\n");
+      printf("                3.Bang xep hang\n");
+      printf("		4.Thoat\n");
       printf("**************************************************\n");
       printf("Moi ban lua chon : ");scanf("%d",&choose);
 
@@ -236,13 +246,15 @@ int main()
 
             }
           break;
+        case CASE_RANK :
+          get_rank();
+          break;
         case CASE_EXIT : break;
         default : choose = 0;break;
 
         }
 
-    }
-
+      }
 }
 
 void sigHandleSigalrm(int signo)
@@ -315,4 +327,36 @@ void signup(int sock)
   send(sock, dangnhap, strlen(dangnhap), 0);
 }
 
-
+void get_rank(){
+  rank d[50];
+  rank k;
+  FILE *p1;
+  int i=0,m=0,y=0;
+  p1=fopen("rank.txt","rb");
+        while(1)
+    {
+      fread(&k,sizeof(k),1,p1);
+      d[++m]=k;
+      if(feof(p1))
+        break;
+    }
+    fclose(p1);
+        int o;
+        for(i=1;i<=m-1;i++)
+      for(y=i+1;y<=m;y++)
+      {
+        if(d[i].point<d[y].point)
+          {
+            d[o]=d[i];
+            d[i]=d[y];
+            d[y]=d[o];
+          }
+      }
+      printf("\n----------------TOP 5--------------------\n");
+        printf("\n%-5s%-30s%-10s\n","RANK","HO TEN","DIEM");
+        for(i=1;i<5;i++)
+    {
+      printf("\n%-5d%-30s%-10d\n",i,d[i].name,d[i].point);
+    }
+    printf("\n--------------------------------------------\n");
+}

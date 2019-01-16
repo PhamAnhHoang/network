@@ -42,13 +42,17 @@ struct user{
   int state;
 };
 
-
+typedef struct
+{
+  char name[50];
+  int point;
+}rank;
 
 int num_question;
 int num_line;
 int socaudung,socausai,socauboqua;
 struct question q[10];
-
+rank r;
 
 void handle_child(int x)
 {
@@ -134,7 +138,6 @@ main()
 
 	  while(1)
 	    {
-
 	      char *receive;
 	      receive = (char *) malloc(1024 * sizeof(char));
 	      byte_recv = recv(sock_client, receive, 1024, 0);
@@ -165,6 +168,14 @@ main()
                   socausai = socausai - socauboqua;
                   int diemsoD;
                   diemsoD = socaudung * 20 - socausai * 10;
+
+                  r.point=diemsoD;
+                  FILE *p;
+                  p=fopen("rank.txt","ab");
+                  fwrite(&r,sizeof(r),1,p);
+                  fclose(p);
+
+
                   sprintf(caudung, "%d", socaudung);
                   sprintf(causai, "%d", socausai);
                   sprintf(boqua, "%d", socauboqua);
@@ -183,7 +194,6 @@ main()
                   strcat(guikq, "\n");
                   strcat(guikq, "Diem so : ");
                   strcat(guikq, diemso);strcat(guikq, "\n");
-
                   send(sock_client, guikq, strlen(guikq), 0);  // Gui tra lai phia Client ket qua  bai thi
                 }
             }
@@ -221,6 +231,7 @@ main()
                 }
 
             }
+
 	      free(receive);
 	    }
 	}
@@ -288,6 +299,9 @@ int checklogin(char *username,int sock_client)
       strcat(user, " ");
       strcat(user, is->fields[1]);
       if(strcmp( username, user ) == 0)
+      {
+        strcpy(r.name,is->fields[0]);
+      }
 	    flag = 1;
     }
 
