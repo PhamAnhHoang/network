@@ -96,6 +96,7 @@ int main()
       switch(choose)
         {
         case CASE_LOGIN :
+          printf("\nChuc nang dang nhap: \n");
           count_login = 0;
           m = 0;
           write = CAN_NOT_WRITE;
@@ -220,6 +221,7 @@ int main()
 
           break;
         case CASE_REGISTER : log = HAS_NOT_LOG;
+          printf("\nChuc nang dang ky: \n");
           while(1)
             {
               if(log == HAS_NOT_LOG)
