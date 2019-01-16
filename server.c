@@ -304,8 +304,8 @@ int checklogin(char *username,int sock_client)
       if(strcmp( username, user ) == 0)
       {
         strcpy(r.name,is->fields[0]);
+  	    flag = 1;
       }
-	    flag = 1;
     }
 
   if(flag ==  0)
@@ -472,7 +472,7 @@ void get_rank(int sock_client){
   while(!feof(p1))
   {
     if(fread(&k,sizeof(k),1,p1)!=NULL)
-    d[++m]=k;
+      d[++m]=k;
   }
   fclose(p1);
     int o;
@@ -486,9 +486,9 @@ void get_rank(int sock_client){
             d[y]=d[o];
           }
       }
-      strcpy(string,"\n----------------TOP 5--------------------\n");
+      strcpy(string,"\n----------------TOP 5-----------------------\n");
       strcat(string,"RANK   HO TEN          DIEM\n");
-        for(i=1;i<5;i++)
+        for(i=1;i<=5;i++)
     {
       sprintf(stt,"%d",i);      
       sprintf(name1, "%s", d[i].name);
