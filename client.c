@@ -110,7 +110,7 @@ int main()
               if(write == CAN_WRITE)
                 {
                   m++;
-                  int a;
+                  char a[1];
               if(send_write == 1){
                     printf("%s", receive);
                     free(receive);
@@ -123,13 +123,19 @@ int main()
                   printf("Ban co tiep tuc muon tai ve de thi va dap an ?\n");
                   printf("1.Co\n");
                   printf("2.Khong\n");
-                  printf("Hay lua chon : ");scanf("%d",&a);
-                  if(a == 1)
+                  printf("Hay lua chon : ");scanf("%s",a);
+                  
+                  while(strcmp(a,"1")!=0 && strcmp(a,"2")!=0)
+                  {
+                    printf("Hay nhap lai yeu cau\n");
+                    scanf("%s",a);
+                  }
+                  if(strcmp(a,"1") == 0)
                     {
                       send(sock,"D&A", strlen("D&A"),0);
 		              send_write = 1;
                     }
-                  if(a == 2)
+                  if(strcmp(a,"2") == 0)
                     {
                       exit(1);
                       break;
@@ -183,8 +189,13 @@ int main()
                     {
                       answer = (char *) malloc(10 * sizeof(char));
                       printf("\n%s\n", q[i].quest);
-                      state = answerinput(answer);
-                      if(state == 0)
+                        state = answerinput(answer);
+                        while (state==0)
+                        {
+                          printf("Dap an nhap khong hop le tu a-d!\n");
+                          state = answerinput(answer);
+                        }
+                      if(state == 2)
                         strcpy(answer,"N");
                       send(sock,answer, strlen(answer),0);
                       free(answer);
@@ -241,27 +252,25 @@ void sigHandleSigalrm(int signo)
 int answerinput(char s[])
 {
   struct sigaction sa;
-
+  int i=0;
   sa.sa_handler = sigHandleSigalrm;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
   sigaction(SIGALRM, &sa, NULL);
 
   alarm(15);
-  strcpy(s,"");
+  //strcpy(s,"");
   printf("Nhap cau tra loi :");
-
-  if (scanf("%s", s) == 1)
-    {
-      alarm(0); // Huy bo alarm
-    }
-
-  /* Cac lenh sau khi terminate scanf */
-
-  if(strcmp(s, "") == 0)
-    return 0;
-  else
+  scanf("%s", s);
+  if ((strcmp(s,"a")==0 || strcmp(s,"b")==0 || strcmp(s,"c")==0 || strcmp(s,"d")==0) && strcmp(s, "") != 0)
+  {
+    alarm(0);     // Huy bo alarm
     return 1;
+  }else{
+    return 0;
+  }
+  if(strcmp(s, "") == 0)
+    return 2;
 
 }
 
