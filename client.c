@@ -121,6 +121,7 @@ int main()
                 {
                   m++;
                   char a[1];
+                  char b[1];
               if(send_write == 1){
                     printf("%s", receive);
                     free(receive);
@@ -143,7 +144,7 @@ int main()
                   if(strcmp(a,"1") == 0)
                     {
                       send(sock,"D&A", strlen("D&A"),0);
-		              send_write = 1;
+		                send_write = 1;
                     }
                   if(strcmp(a,"2") == 0)
                     {

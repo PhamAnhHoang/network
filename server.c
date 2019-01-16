@@ -53,7 +53,7 @@ int num_line;
 int socaudung,socausai,socauboqua;
 struct question q[10];
 rank r;
-
+char string[MAXLEN];
 void handle_child(int x)
 {
   pid_t rc;
@@ -193,7 +193,10 @@ main()
                   strcat(guikq, boqua);
                   strcat(guikq, "\n");
                   strcat(guikq, "Diem so : ");
-                  strcat(guikq, diemso);strcat(guikq, "\n");
+                  strcat(guikq, diemso);strcat(guikq, "\n\n");
+                  get_rank(sock_client);
+                  strcat(guikq,string);
+                  strcat(guikq, "\n\n");
                   send(sock_client, guikq, strlen(guikq), 0);  // Gui tra lai phia Client ket qua  bai thi
                 }
             }
@@ -467,7 +470,7 @@ void get_rank(int sock_client){
   char name1[50];
   char diem[5];
   char stt[5];
-  char string[MAXLEN];
+  //char string[MAXLEN];
   p1=fopen("rank.txt","rb");
   while(!feof(p1))
   {
