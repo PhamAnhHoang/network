@@ -231,7 +231,10 @@ main()
                 }
 
             }
-
+        if (strcmp(receive,"get_rank") == 0)
+        {
+          get_rank(sock_client);
+        }
 	      free(receive);
 	    }
 	}
@@ -456,5 +459,49 @@ void chamdiem(char *dapan)
 
 }
 
-
-
+void get_rank(int sock_client){
+  rank d[50];
+  rank k;
+  FILE *p1;
+  int i=0,m=0,y=0;
+  char name1[50];
+  char diem[5];
+  char stt[5];
+  char string[MAXLEN];
+  p1=fopen("rank.txt","rb");
+        while(1)
+    {
+      fread(&k,sizeof(k),1,p1);
+      d[++m]=k;
+      if(feof(p1))
+        break;
+    }
+    fclose(p1);
+        int o;
+        for(i=1;i<=m-1;i++)
+      for(y=i+1;y<=m;y++)
+      {
+        if(d[i].point<d[y].point)
+          {
+            d[o]=d[i];
+            d[i]=d[y];
+            d[y]=d[o];
+          }
+      }
+      strcpy(string,"\n----------------TOP 5--------------------\n");
+      strcat(string,"RANK   HO TEN          DIEM\n");
+        for(i=1;i<5;i++)
+    {
+      sprintf(stt,"%d",i);      
+      sprintf(name1, "%s", d[i].name);
+      sprintf(diem, "%d", d[i].point);
+      strcat(string,stt);
+      strcat(string,"\t");
+      strcat(string,name1);
+      strcat(string,"\t\t");
+      strcat(string,diem);
+      strcat(string,"\n");
+    }
+    strcat(string,"\n--------------------------------------------\n");
+    send(sock_client, string, strlen(string), 0); 
+}

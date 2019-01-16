@@ -246,9 +246,17 @@ int main()
 
             }
           break;
+        
         case CASE_RANK :
-          get_rank();
+          send(sock,"get_rank", strlen("get_rank"),0);
+          char *receive;
+          receive = (char *) malloc( 1024 * sizeof(char) );
+          bytes_recieved = recv(sock, receive, 1024, 0);
+          receive[bytes_recieved] = '\0';
+          printf("%s", receive);
+          free(receive);
           break;
+
         case CASE_EXIT : break;
         default : choose = 0;break;
 
@@ -327,36 +335,3 @@ void signup(int sock)
   send(sock, dangnhap, strlen(dangnhap), 0);
 }
 
-void get_rank(){
-  rank d[50];
-  rank k;
-  FILE *p1;
-  int i=0,m=0,y=0;
-  p1=fopen("rank.txt","rb");
-        while(1)
-    {
-      fread(&k,sizeof(k),1,p1);
-      d[++m]=k;
-      if(feof(p1))
-        break;
-    }
-    fclose(p1);
-        int o;
-        for(i=1;i<=m-1;i++)
-      for(y=i+1;y<=m;y++)
-      {
-        if(d[i].point<d[y].point)
-          {
-            d[o]=d[i];
-            d[i]=d[y];
-            d[y]=d[o];
-          }
-      }
-      printf("\n----------------TOP 5--------------------\n");
-        printf("\n%-5s%-30s%-10s\n","RANK","HO TEN","DIEM");
-        for(i=1;i<5;i++)
-    {
-      printf("\n%-5d%-30s%-10d\n",i,d[i].name,d[i].point);
-    }
-    printf("\n--------------------------------------------\n");
-}
